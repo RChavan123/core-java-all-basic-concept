@@ -1,0 +1,159 @@
+Lombok  dependency
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class User {
+    private final String name;
+    private final int age;
+    private final String email;
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        User user = User.builder()
+                        .name("John Doe")
+                        .age(30)
+                        .email("john.doe@example.com")
+                        .build();
+
+        System.out.println(user.getName()); // Output: John Doe
+    }
+}
+
+
+1)Copying Objects with toBuilder
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder(toBuilder = true)
+public class User {
+    private final String name;
+    private final int age;
+    private final String email;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User user = User.builder()
+                        .name("John Doe")
+                        .age(30)
+                        .email("john.doe@example.com")
+                        .build();
+
+        User updatedUser = user.toBuilder()
+                               .age(31)
+                               .build();
+
+        System.out.println(updatedUser.getAge()); // Output: 31
+    }
+}
+
+
+
+2. Default Values with @Builder.Default
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class User {
+    @Builder.Default
+    private final String name = "Default Name";
+    @Builder.Default
+    private final int age = 25;
+    private final String email;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User user = User.builder()
+                        .email("john.doe@example.com")
+                        .build();
+
+        System.out.println(user.getName()); // Output: Default Name
+        System.out.println(user.getAge());  // Output: 25
+    }
+}
+
+
+3. Singular Collections with @Singular
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Singular;
+import java.util.List;
+
+@Getter
+@Builder
+public class User {
+    private final String name;
+    @Singular
+    private final List<String> roles;
+}
+
+public class Main {
+    public static void main(String[] args) {
+        User user = User.builder()
+                        .name("John Doe")
+                        .role("Admin")
+                        .role("User")
+                        .build();
+
+        System.out.println(user.getRoles()); // Output: [Admin, User]
+    }
+}
+
+
+
+
+1. Copying Objects with toBuilder
+
+The toBuilder feature in Lombok allows you to create a builder from an existing object. This is particularly useful when you need to create a new object that is similar to an existing one but with some modifications.
+ By setting toBuilder = true in the @Builder annotation, Lombok generates a toBuilder() method in your class. 
+ This method returns a builder initialized with the values of the current object, allowing you to modify specific fields and create a new instance.
+
+Example Use Case:
+
+You have a User object with several fields already set.
+You want to create a new User object with the same values but change the age field.
+Using toBuilder(), you can easily achieve this without manually copying all the fields.
+
+2. Default Values with @Builder.Default
+
+The @Builder.Default annotation allows you to specify default values for fields in your class.
+ When you use the builder to create an object, these default values are used if no other value is provided for those fields. 
+ This helps ensure that your objects are always initialized with meaningful default values, reducing the risk of null or uninitialized fields.
+
+Example Use Case:
+
+You have a User class with a name field that should default to “Default Name” if not specified.
+By using @Builder.Default, you ensure that any User object created without explicitly setting the name field will have “Default Name” as its value.
+
+3. Singular Collections with @Singular
+The @Singular annotation simplifies the process of adding elements to collections (like List, Set, or Map) in a builder. 
+Instead of having to create and manage the collection yourself, @Singular allows you to add individual elements directly in the builder. 
+Lombok takes care of creating and managing the collection for you.
+
+Example Use Case:
+
+You have a User class with a roles field that is a List<String>.
+Using @Singular, you can add roles one by one in the builder, and Lombok will handle the creation and population of the List.
+Summary
+
+toBuilder = true: Enables creating a builder from an existing object, allowing easy modification and creation of new instances.
+@Builder.Default: Sets default values for fields, ensuring objects are initialized with meaningful defaults.
+
+@Singular: Simplifies adding elements to collections in a builder, managing the collection creation and population for you.
+These features enhance the flexibility and readability of your code, making object creation more intuitive and less error-prone.
+
+
+Without @Builder: Creating an object with many parameters can be cumbersome and error-prone.
+With @Builder: You can create objects in a more readable and maintainable way.
+
